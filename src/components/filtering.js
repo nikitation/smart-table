@@ -19,11 +19,17 @@ export function initFiltering(elements, indexes) {
     return (data, state, action) => {
         if (action && action.name === 'clear') {
             const input = action.parentElement.querySelector('input, select');
-
             input.value = '';
             state[action.dataset.field] = '';
         }
 
-        return data.filter(row => compare(row, state));
+        const preparedState = {
+            ...state,
+            total: [state.totalFrom, state.totalTo]
+        };
+        delete preparedState.totalFrom;
+        delete preparedState.totalTo;
+
+        return data.filter(row => compare(row, preparedState));
     }
 }
